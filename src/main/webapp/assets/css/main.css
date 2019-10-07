@@ -1,0 +1,40 @@
+footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+.container-fluid{
+	padding: 10px 10px 50px 10px;
+}
+.title-page{
+	font-size: 25px;
+	font-weight: bold;
+	text-align: center;
+	color: blue;
+	margin: 20px auto;
+}
+.button-save{
+	width: 150px !important;
+	margin: 15px auto;
+}
+.save{
+	font-weight: bold;
+	width: 150px !important;
+}
+.button-add{
+	border-radius: 50%;
+	position: fixed;
+	top: 70px;
+	right: 10px;
+	padding: .5% 1% .3% 1%;
+	font-weight: bold;
+}
+
+
+
+
+
+

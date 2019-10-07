@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!--Realm className="org.apache.catalina.realm.JDBCRealm"
+           pathname="/media/everton/BKP_ARQUIVOS/desenv/projects/workspace_eclipse/gestorFin/web/WEB-INF/users.xml"
+           digest="SHA-256"/-->
+           
+    <Realm  className="org.apache.catalina.realm.JDBCRealm"
+    	driverName="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/gestorfin"
+        connectionName="mysql" 
+        connectionPassword="mysql"        
+        userTable="users" userNameCol="username" userCredCol="password"
+        userRoleTable="roles" roleNameCol="role"> 
+        <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler" algorithm="SHA-256" />
+        </Realm> 
+        
+</Context>
+
