@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<form method="POST" action="${action}">
+	<input 	type="hidden" name="usrId" value="${user.id == 0 ? '' : user.id}" >
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="usrId">Codigo</label> 
+				<input 	type="number" 
+						class="form-control" 
+						placeholder="Novo Usuário" 
+						value="${user.id == 0 ? '' : user.id}"
+						disabled="disabled">
+			</div>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="usrName">Nome Completo</label> 
+				<input 	type="text" 
+						class="form-control ${empty user.errors.name?'':'is-invalid'}" 
+						placeholder="Nome Completo" 
+						name="usrName" 
+						value="${user.name}"
+						required="required">
+					<div class="invalid-feedback">
+						Informe um Nome com mais de 3 digitos.
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="usrUsername">Usuário</label> 
+				<input 	type="text"	
+						class="form-control ${empty user.errors.username?'':'is-invalid'}" 
+						placeholder="Usuário" 
+						name="usrUsername" 
+						value="${user.username}"
+						required="required">
+				<div class="invalid-feedback">
+					Informe um usuário com mais de 3 digitos.
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="usrPassword">Senha</label> 
+				<input 	type="password" 
+						class="form-control ${empty user.errors.password?'':'is-invalid'}" 
+						placeholder="Senha" 	
+						name="usrPassword" 
+						value="${user.password}"
+						required="required">
+				<div class="invalid-feedback">
+					Informe uma senha com mais de 3 digitos.
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="usrUserRole">Perfil de Acesso</label> 
+				<select class="custom-select" name="usrUserRole">
+					<c:forEach var="roleAccess" items="${rolesAccess}">
+					   <option value="${ roleAccess.key }" ${ roleAccess.key == user.userRole.role ? "selected" : ""}>${ roleAccess.value}</option>
+				    </c:forEach>
+			    </select>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="button-save">
+				<button class="btn btn-primary button-save">Salvar</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+

@@ -1,13 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 
 <form method="post" action="${action}">
+	<input type="hidden" name="expId" value="${ expense.id }">
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="form-group">
-				<label for="expDescription">DescriÃ§Ã£o</label> <input type="text"
-					class="form-control" placeholder="DescriÃ§Ã£o da conta a pagar"
-					name="expDescription" required="required">
+				<label for="expId">Código</label> 
+				<input type="text" value="${ expense.id }"	class="form-control" placeholder="Nova conta a pagar"
+					 disabled>
 			</div>
 		</div>
 	</div>
@@ -15,8 +18,20 @@
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="form-group">
-				<label for="expDatePay">Data Vencimento</label> <input type="date"
-					class="form-control" name="expDatePay" required="required">
+				<label for="expDescription">Descrição</label> <input type="text"
+					class="form-control" placeholder="Descrição da conta a pagar"
+					name="expDescription" value="${ expense.description }" required="required">
+			</div>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="expDatePay">Data Vencimento</label>
+				 <input type="date" class="form-control" 
+				 		value="<fmt:formatDate value="${ expense.datePay }" pattern="yyyy-MM-dd"/>" 
+				 		name="expDatePay" required="required">
 			</div>
 		</div>
 	</div>
@@ -29,8 +44,9 @@
 					<div class="input-group-prepend">
 						<div class="input-group-text">R$</div>
 					</div>
-					<input type="text" class="form-control"
-						placeholder="Valor a pagar" name="expValuePay" required="required">
+					<input type="text" class="form-control" placeholder="Valor a pagar"
+						   value ="<fmt:formatNumber value="${ expense.valuePay }" minFractionDigits = "2"/>"
+						   name="expValuePay" required="required">
 				</div>
 			</div>
 		</div>
@@ -46,7 +62,7 @@
 							<input type="checkbox" name="expPaid" class="input-group-text">
 						</div>
 					</div>
-					<input type="text" class="form-control" value="NÃO" disabled>
+					<input type="text" class="form-control" id="RevReceivebled" value="${ expense.paid == 'F' ? 'SIM' : 'NÃO' }" disabled>
 				</div>
 			</div>
 		</div>
@@ -60,6 +76,3 @@
 		</div>
 	</div>
 </form>
-
-
-
