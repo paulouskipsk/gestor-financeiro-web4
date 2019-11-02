@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
 
 import br.edu.utfpr.model.User;
 import br.edu.utfpr.model.UserRole;
 import br.edu.utfpr.persistence.PersistenceUserAndRole;
 import br.edu.utfpr.util.Constants;
+import br.edu.utfpr.util.FlashMessage;
 import br.edu.utfpr.util.PersistenceFactory;
 
 @WebServlet(urlPatterns = { "/usuarios", "/novo-usuario", "/editar-usuario", "/deletar-usuario"})
@@ -59,7 +59,12 @@ public class UsersController extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		Map<String, String> rolesAccess = Constants.RoleAccess.getRolesAccess();
-		User user = new User();
+		User user;
+		if(session.getAttribute("user") == null) {
+			user = new User();
+		}else {
+			user = (User) session.getAttribute("user");
+		}
 
 		session.setAttribute("action", "novo-usuario");
 		session.setAttribute("user", user);
@@ -87,43 +92,56 @@ public class UsersController extends HttpServlet {
 				.find(Long.parseLong(request.getParameter("id")));
 		try {
 			ur.delete(user);
-			JOptionPane.showMessageDialog(null, "Usuário Deletado com sucesso");
-			response.sendRedirect("usuarios");
+			FlashMessage.addMessage("success", "Usuário Deletado com sucesso.");
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Erro ao remover usuário");
-			response.sendRedirect("usuarios");			
+			FlashMessage.addMessage("danger", "Erro ao remover usuário.");
 		}
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		response.sendRedirect("usuarios");
 	}
 
 // ============================================== doPost Methods ================================================//
 	
 	private void doPostNewUser(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+
+		User isNull = PersistenceFactory.getPersistenceUserInstance().getByProperty("username", request.getParameter("usrUsername"));
 		User user = new User(null, 	request.getParameter("usrName"), 
 									request.getParameter("usrUsername"),
 									request.getParameter("usrPassword"),
 									new UserRole(request.getParameter("usrUsername"), 
 												 request.getParameter("usrUserRole")));
-
-		if (user.isValid()) {
-			PersistenceUserAndRole persistence = PersistenceFactory.getPersistenceUserAndRoleInstance();
-			try {
-				persistence.save(user);
-				JOptionPane.showMessageDialog(null, "usuario salvo com sucesso.");
-				response.sendRedirect("usuarios");
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao salvar usuario.");
-				throw e;
+		if(isNull == null) {
+			if (user.isValid()) {
+				PersistenceUserAndRole persistence = PersistenceFactory.getPersistenceUserAndRoleInstance();
+				try {
+					persistence.save(user);
+					
+					FlashMessage.addMessage("success", "Usuário salvo com sucesso.");
+					request.setAttribute("flash.messages", FlashMessage.getMessages());
+					session.removeAttribute("user");
+					response.sendRedirect("usuarios");
+					return;
+				} catch (Exception e) {
+					FlashMessage.addMessage("success", "Erro ao salvar usuario: "+e);
+				}
+			} else {
+				FlashMessage.addMessage("danger", "Erros encontrados no cadastro, favor verificar os campos indicados.");
 			}
-		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("user", user);
-			request.getRequestDispatcher("WEB-INF/views/users/user-new.jsp").forward(request, response);
+		}else {
+			FlashMessage.addMessage("danger", "Usuário já cadastrado. <br/><strong>Verifique seu cadastro ou altereo nome de Usuário.</strong>");
 		}
+		
+		session.setAttribute("user", user);
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		response.sendRedirect("novo-usuario");
+
 	}
 
 	private void doPostEditUser(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		PersistenceUserAndRole pUser = PersistenceFactory.getPersistenceUserAndRoleInstance();		
 		
 		User user = pUser.find(Long.parseLong(request.getParameter("usrId")));
@@ -132,7 +150,6 @@ public class UsersController extends HttpServlet {
 		
 		user.setName(request.getParameter("usrName"));
 		user.setUserRole(userRole);
-		//user.setUsername(request.getParameter("usrUsername"));
 		if(request.getParameter("usrPassword") != null && request.getParameter("usrPassword").trim() != "") {
 			user.setPassword(request.getParameter("usrPassword"));
 		}
@@ -140,15 +157,21 @@ public class UsersController extends HttpServlet {
 		if (user.isValid()) {
 			try {
 				pUser.update(user);
-				JOptionPane.showMessageDialog(null, "usuario Alterado");
+				
+				FlashMessage.addMessage("success", "Usuário Alterado com sucesso.");
+				request.setAttribute("flash.messages", FlashMessage.getMessages());
+				session.removeAttribute("user");
 				response.sendRedirect("usuarios");
+				return;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao Alterar usuario: "+e);
+				FlashMessage.addMessage("danger", "Erro ao Alterar usuário: "+e);
 			}
-		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("user", user);
-			request.getRequestDispatcher("WEB-INF/views/users/user-edit.jsp").forward(request, response);
+		} else {	
+			FlashMessage.addMessage("danger", "Erros encontrados no cadastro, favor verificar os campos indicados.");
 		}
+		
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		session.setAttribute("user", user);
+		response.sendRedirect("novo-usuario");
 	}
 }

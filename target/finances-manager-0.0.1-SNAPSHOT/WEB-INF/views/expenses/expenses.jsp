@@ -30,10 +30,10 @@
 						<td>${ expense.description }</td>
 						<td><fmt:formatDate value="${ expense.datePay }" pattern="dd/MM/yyyy"/></td>
 						<td><fmt:formatNumber value="${ expense.valuePay }" type ="currency"/></td>
-						<td>${ expense.paid == 'F' ? "SIM" : "NÃO" }</td>
+						<td>${ expense.paid == 'F' ? "NÃO" : "SIM" }</td>
 						<td>
 							<a href="editar-despesa?id=${expense.id}">Editar</a> | 
-							<a href="deletar-despesa?id=${expense.id}">Deletar</a>
+							<a href="deletar-despesa?id=${expense.id}" class="delete">Deletar</a>
 						</td>
 					</tr>
 				</c:forEach>

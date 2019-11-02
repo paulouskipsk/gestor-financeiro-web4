@@ -33,34 +33,34 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="row justify-content-center">
-		<div class="col-md-6">
-			<div class="form-group">
-				<label for="usrUsername">Usuário</label> 
-				<input 	type="text"	
-						class="form-control ${empty user.errors.username?'':'is-invalid'}" 
-						placeholder="Usuário" 
-						name="usrUsername" 
-						value="${user.username}"
-						required="required">
-				<div class="invalid-feedback">
-					Informe um usuário com mais de 3 digitos.
+	<c:if test="${action ne 'editar-usuario'}">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="usrUsername">Usuário</label> 
+					<input 	type="text"	
+							class="form-control ${empty user.errors.username?'':'is-invalid'}" 
+							placeholder="Usuário" 
+							name="usrUsername" 
+							value="${user.username}"
+							required="required">
+					<div class="invalid-feedback">
+						Informe um usuário com mais de 3 digitos.
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
+	</c:if>
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="form-group">
-				<label for="usrPassword">Senha</label> 
+				<label for="usrPassword" class="form-inline label-toogle">
+					${action eq 'editar-usuario' ? '<a href=#>Alterar Senha</a>' : 'Senha'} 
+				</label> 
 				<input 	type="password" 
-						class="form-control ${empty user.errors.password?'':'is-invalid'}" 
+						class="form-control ${action eq 'editar-usuario'?'hide':''} ${empty user.errors.password?'':'is-invalid'}" 
 						placeholder="Senha" 	
-						name="usrPassword" 
-						value="${user.password}"
-						required="required">
+						name="usrPassword">
 				<div class="invalid-feedback">
 					Informe uma senha com mais de 3 digitos.
 				</div>

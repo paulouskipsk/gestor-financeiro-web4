@@ -24,7 +24,7 @@ public class Constants {
 		public static Map<String, String> getRolesAccess() {
 			Map<String, String> roles = new HashMap<String, String>();
 			roles.put("ADM", "Administrador");
-			roles.put("USR", "Usuário");
+			roles.put("USR", "Usuario");
 			
 			return roles;
 		}	

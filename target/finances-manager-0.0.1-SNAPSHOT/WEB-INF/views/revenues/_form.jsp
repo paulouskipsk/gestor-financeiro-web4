@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <form method="post" action="${action}">
 	<input type="hidden" name="revId" value="${ revenue.id }">
@@ -28,9 +30,11 @@
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="dateReceiveble">Data Recebimento</label> 
-				<input type="date" class="form-control" 
-				 		value="${ revenue.dateReceiveble }" 
-				 		name="revDateReceiveble" required="required">
+				<input type="date" 
+						class="form-control" 
+				 		value="<fmt:formatDate value="${ revenue.dateReceiveble }" pattern="yyyy-MM-dd"/>"
+				 		name="revDateReceiveble" 
+				 		required="required">
 			</div>
 		</div>
 	</div>

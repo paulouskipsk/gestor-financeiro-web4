@@ -104,4 +104,11 @@ body {
   .form-label-group input:-ms-input-placeholder {
     color: #777;
   }
+  
+}
+ #flash-message{
+	position: absolute; 
+	margin: 0px 25%; 
+	z-index: 99; 
+	top: 10%;
 }

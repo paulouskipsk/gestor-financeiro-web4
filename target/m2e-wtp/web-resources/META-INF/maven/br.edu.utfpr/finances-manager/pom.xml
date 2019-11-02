@@ -79,6 +79,13 @@
 			<version>6.0</version>
 		</dependency>
 
+		<!-- Gson Google -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.primefaces.themes/south-street -->
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>

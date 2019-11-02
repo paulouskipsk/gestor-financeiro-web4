@@ -4,6 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <t:template>
 	<jsp:body>
+		<div id="last-server-initialization"></div>
+	
 		<div id="logo-gestor-home">
 			<img src="assets/img/logo-gestor.png"/>
 		</div>

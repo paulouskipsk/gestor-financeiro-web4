@@ -5,12 +5,18 @@
 <t:template>
 	<jsp:body>
 		<h1 class="title-page">Usuários</h1>
-		
+
 		<a href="novo-usuario">
 		<button type="button" class="btn btn-primary button-add">
 			<i class="large material-icons">add</i>
 		</button>
 		</a>
+		<div id="user-roles">
+			<a href="#">
+				<h5 id="user-roles-text">Regras de Usuario cadastradas </h5>
+				
+			</a>
+		</div>
 		
 		<table class="table table-striped">
 			<thead class="bg-info"> <!-- class="thead-dark"-->
@@ -30,7 +36,7 @@
 						<td>${ user.username }</td>
 						<td>${ user.userRole.role == "USR" ? "Usuário" : "Administrador" }</td>
 						<td>
-							<a href="editar-usuario?id=${user.id}">Editar</a> | <a href="deletar-usuario?id=${user.id}">Deletar</a>
+							<a href="editar-usuario?id=${user.id}">Editar</a> | <a href="deletar-usuario?id=${user.id}" class="delete">Deletar</a>
 						</td>
 					</tr>
 				</c:forEach>

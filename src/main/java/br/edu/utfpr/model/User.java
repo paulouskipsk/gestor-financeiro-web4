@@ -65,7 +65,7 @@ public class User {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.trim();
 	}
 
 	public String getUsername() {
@@ -73,7 +73,7 @@ public class User {
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username = username.trim();
 	}
 
 	public String getPassword() {
@@ -81,7 +81,7 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = HashGenerator.getSha256(password);
+		this.password = password.trim();
 	}
 
 	public UserRole getUserRole() {
@@ -114,6 +114,8 @@ public class User {
 
 		if (this.password == null || this.password.length() < 3) {
 			this.errors.put("password", "Senha invalida.");
+		}else {
+			this.password = HashGenerator.getSha256(password);
 		}
 
 	}

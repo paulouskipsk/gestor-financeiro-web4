@@ -15,6 +15,19 @@ footer {
 	width: 30%;
 	height: 30%;
 }
+#user-roles-text{
+	margin-bottom: 15px;
+}
+ #flash-message{
+	position: absolute; 
+	margin: 20px 10%; 
+	z-index: 99; 
+	width: 80%
+}
+.material-icons{
+	float: left;
+}
+
 .container-fluid{
 	padding: 10px 10px 50px 10px;
 }
@@ -58,7 +71,13 @@ footer {
 	color: red;
 	font-size: 3em;
 }
-
-
-
+.img-hide{
+	width: 60px;
+	height:90px;
+}
+#last-server-initialization{
+	position: fixed;
+	bottom: 0;
+	color:red;
+}
 

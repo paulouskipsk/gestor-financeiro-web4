@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import br.edu.utfpr.model.Expense;
 import br.edu.utfpr.persistence.PersistenceExpense;
+import br.edu.utfpr.util.FlashMessage;
 import br.edu.utfpr.util.Format;
 import br.edu.utfpr.util.PersistenceFactory;
 
@@ -22,25 +23,38 @@ public class ExpensesController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		if (request.getServletPath().contains("despesas")) {
-			this.doGetExpenses(request, response);
-		} else if (request.getServletPath().contains("nova-despesa")) {
-			this.doGetNewExpense(request, response);
-		} else if (request.getServletPath().contains("editar-despesa")) {
-			this.doGetEditExpense(request, response);
-		} else if (request.getServletPath().contains("deletar-despesa")) {
-			this.doGetDropExpense(request, response);
+		HttpSession session = request.getSession();
+		FlashMessage.clean();
+		
+		if(session.getAttribute("isLogged") != null) {
+			if (request.getServletPath().contains("despesas")) {
+				this.doGetExpenses(request, response);
+			} else if (request.getServletPath().contains("nova-despesa")) {
+				this.doGetNewExpense(request, response);
+			} else if (request.getServletPath().contains("editar-despesa")) {
+				this.doGetEditExpense(request, response);
+			} else if (request.getServletPath().contains("deletar-despesa")) {
+				this.doGetDropExpense(request, response);
+			}
+		}else {
+			request.setAttribute("accessDenied", "true");
+			request.getRequestDispatcher("login").forward(request, response);
 		}
 	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		if (request.getServletPath().contains("nova-despesa")) {
-			this.doPostNewExpense(request, response);
-		} else if (request.getServletPath().contains("editar-despesa")) {
-			this.doPostEditExpense(request, response);
+		HttpSession session = request.getSession();
+		FlashMessage.clean();
+		
+		if(session.getAttribute("isLogged") != null) {
+			if (request.getServletPath().contains("nova-despesa")) {
+				this.doPostNewExpense(request, response);
+			} else if (request.getServletPath().contains("editar-despesa")) {
+				this.doPostEditExpense(request, response);
+			}
+		}else {
+			request.setAttribute("accessDenied", true);
+			request.getRequestDispatcher("login").forward(request, response);
 		}
 	}
 // ============================================== doGet Methods ================================================//
@@ -72,7 +86,9 @@ public class ExpensesController extends HttpServlet {
 			request.setAttribute("action", "editar-despesa");
 			request.getRequestDispatcher("WEB-INF/views/expenses/expense-edit.jsp").forward(request, response);
 		} else {
-			JOptionPane.showMessageDialog(null, "Despesa não informada");
+			FlashMessage.addMessage("danger", "Despesa não informada.");
+			request.setAttribute("flash.messages", FlashMessage.getMessages());
+			response.sendRedirect("despesas");
 		}
 	}
 
@@ -85,13 +101,14 @@ public class ExpensesController extends HttpServlet {
 		if (expense.isValid() && expense.getId() != null) {
 			try {
 				persistence.delete(expense);
-				JOptionPane.showMessageDialog(null, "Despesa deletada com sucesso");
+				FlashMessage.addMessage("success", "Despesa deletada com sucesso.");
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao deletar Despesa");
+				FlashMessage.addMessage("danger", "Erro ao deletar Despesa.");
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Despesa invalida");
+			FlashMessage.addMessage("danger", "Despesa inválida.");
 		}
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
 		response.sendRedirect("despesas");
 	}
 
@@ -99,7 +116,7 @@ public class ExpensesController extends HttpServlet {
 
 	private void doPostNewExpense(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		HttpSession session = request.getSession();
 		Expense expense = new Expense(null, request.getParameter("expDescription"),
 											Double.parseDouble(request.getParameter("expValuePay")),
 											Format.formatStringToDate(request.getParameter("expDatePay")),
@@ -109,26 +126,29 @@ public class ExpensesController extends HttpServlet {
 			PersistenceExpense persistence = PersistenceFactory.getPersistenceExpenseInstance();
 			try {
 				persistence.save(expense);
-				JOptionPane.showMessageDialog(null, "Despesa salva com sucesso.");
-				HttpSession session = request.getSession();
+				FlashMessage.addMessage("success", "Despesa salva com sucesso.");
+				request.setAttribute("flash.messages", FlashMessage.getMessages());
+				
 				session.removeAttribute("expense");
 				response.sendRedirect("despesas");
+				return;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao salvar Despesa. " + e);
-				HttpSession session = request.getSession();
-				session.setAttribute("nova-despesa", expense);
-				response.sendRedirect("nova-despesa");
+				FlashMessage.addMessage("danger", "Erro ao salvar Despesa."+e);
 			}
 		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("nova-despesa", expense);
-			response.sendRedirect("nova-despesa");
+			FlashMessage.addMessage("danger", "Despesa não informada ou não localizada.");
 		}
+		
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		session.setAttribute("nova-despesa", expense);
+		response.sendRedirect("nova-despesa");
+
 	}
 
 	private void doPostEditExpense(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
+		HttpSession session = request.getSession();
 		PersistenceExpense persistence = PersistenceFactory.getPersistenceExpenseInstance();
 		Expense expense = persistence.find(Long.parseLong(request.getParameter("expId")));
 
@@ -140,22 +160,21 @@ public class ExpensesController extends HttpServlet {
 		if (expense.isValid()) {
 			try {
 				persistence.update(expense);
-				JOptionPane.showMessageDialog(null, "Despesa Alterada com sucesso.");
-				HttpSession session = request.getSession();
+				
+				FlashMessage.addMessage("success", "Despesa Alterada com sucesso.");
+				request.setAttribute("flash.messages", FlashMessage.getMessages());
 				session.removeAttribute("expense");
 				response.sendRedirect("despesas");
+				return;
 			} catch (Exception e) {
-				HttpSession session = request.getSession();
-				session.setAttribute("expense", expense);
-				JOptionPane.showMessageDialog(null, "Erro ao salvar Despesa.");
-				response.sendRedirect("editar-despesa");
-				throw e;
+				FlashMessage.addMessage("danger", "Erro ao salvar Despesa: "+e);
 			}
 		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("expense", expense);
-			response.sendRedirect("WEB-INF/views/expenses/expense-new.jsp");
+			FlashMessage.addMessage("danger", "Erro ao salvar Despesa, Verifique os camos indicados.");
 		}
 
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		session.setAttribute("expense", expense);
+		response.sendRedirect("editar-despesa");
 	}
 }

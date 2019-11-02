@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import br.edu.utfpr.model.User;
 import br.edu.utfpr.persistence.PersistenceUser;
 import br.edu.utfpr.util.Constants;
+import br.edu.utfpr.util.FlashMessage;
 import br.edu.utfpr.util.PersistenceFactory;
 
 @WebServlet(urlPatterns = {"/login","/logout"})
@@ -24,34 +25,51 @@ public class LoginController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		if(request.getServletPath().contains(Constants.Routes.LOGOUT)){
-			HttpSession session = request.getSession(false);
-			if(session != null){
-				session.invalidate();
+		if(request.getAttribute("accessDenied") == null) {
+			if(request.getServletPath().contains(Constants.Routes.LOGOUT)){
+				HttpSession session = request.getSession(false);	
+				if(session != null){
+					session.invalidate();
+				}
+				request.getRequestDispatcher(Constants.Routes.ROOT_PATH_VIEWS+"login.jsp").forward(request, response);
+			}else {
+				if(request.getSession().getAttribute("isLogged") == null) {
+					request.getRequestDispatcher(Constants.Routes.ROOT_PATH_VIEWS + "login.jsp").forward(request, response);
+				}else {
+					request.getRequestDispatcher(Constants.Routes.HOME);
+				}
 			}
-			response.sendRedirect("login");
 		}else {
-			request.getRequestDispatcher("/login.html").forward(request, response);
-		}	
+			FlashMessage.addMessage("danger", "Acesso não permitido. É preciso estar Logado para acessar esta função.");
+			request.removeAttribute("accessDenied");
+			request.setAttribute("flash.messages", FlashMessage.getMessages());
+			response.sendRedirect("login");
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		try {
-			request.login(request.getParameter("username"), request.getParameter("password"));
-			
-			HttpSession session = request.getSession();
-			PersistenceUser persistence = PersistenceFactory.getPersistenceUserInstance();
-			User user = persistence.getByProperty("username", request.getParameter("username"));
-			
-			response.addCookie(this.getLogAccess(request, user));
-			response.addCookie(this.getLastServerInitialization());
-			
-			session.setAttribute("isLogged", true);
-			response.sendRedirect(Constants.Routes.HOME);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Erro ao efetuar login :" +e);
+		if(request.getAttribute("accessDenied") == null) {
+			try {
+				request.login(request.getParameter("username"), request.getParameter("password"));
+				
+				HttpSession session = request.getSession();
+				PersistenceUser persistence = PersistenceFactory.getPersistenceUserInstance();
+				User user = persistence.getByProperty("username", request.getParameter("username"));
+				
+				response.addCookie(this.getLogAccess(request, user));
+				response.addCookie(this.getLastServerInitialization());
+				
+				session.setAttribute("isLogged", true);
+				response.sendRedirect(Constants.Routes.HOME);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Erro ao efetuar login :" +e);
+				response.sendRedirect("login");
+			}
+		}else {
+			FlashMessage.addMessage("danger", "Acesso não permitido. É preciso estar Logado para acessar esta função.");
+			request.removeAttribute("accessDenied");
+			request.setAttribute("flash.messages", FlashMessage.getMessages());
 			response.sendRedirect("login");
 		}
 	}

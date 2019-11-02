@@ -30,7 +30,7 @@
 			<div class="form-group">
 				<label for="expDatePay">Data Vencimento</label>
 				 <input type="date" class="form-control" 
-				 		value="<fmt:formatDate value="${ expense.datePay }" pattern="dd/MM/yyyy"/>" 
+				 		value="<fmt:formatDate value="${ expense.datePay }" pattern="yyyy-MM-dd"/>" 
 				 		name="expDatePay" required="required">
 			</div>
 		</div>

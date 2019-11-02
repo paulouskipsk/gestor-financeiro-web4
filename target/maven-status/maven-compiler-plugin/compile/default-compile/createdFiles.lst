@@ -6,6 +6,7 @@ br/edu/utfpr/filter/RevenueFilter.class
 br/edu/utfpr/controllers/UsersController.class
 br/edu/utfpr/persistence/PersistenceUserRole.class
 br/edu/utfpr/filter/RootPageFilter.class
+br/edu/utfpr/filter/FlashScopeFilter.class
 br/edu/utfpr/util/HashGenerator.class
 br/edu/utfpr/util/Constants$Messages.class
 br/edu/utfpr/util/Constants$RoleAccess.class
@@ -15,11 +16,13 @@ br/edu/utfpr/util/PersistenceFactory.class
 br/edu/utfpr/persistence/PersistenceExpense.class
 br/edu/utfpr/controllers/ExpensesController.class
 br/edu/utfpr/model/Expense.class
+br/edu/utfpr/controllers/ReportsController.class
 br/edu/utfpr/model/Revenue.class
 br/edu/utfpr/persistence/PersistenceUserAndRole.class
 br/edu/utfpr/model/User.class
 br/edu/utfpr/filter/XSSRequestWrapper.class
 br/edu/utfpr/filter/ExpenseRequestWrapper.class
+br/edu/utfpr/controllers/HomeController.class
 br/edu/utfpr/persistence/PersistenceRevenue.class
 br/edu/utfpr/controllers/LoginController.class
 br/edu/utfpr/util/PersistenceUtils.class
@@ -28,4 +31,3 @@ br/edu/utfpr/util/Constants.class
 br/edu/utfpr/filter/ExpenseFilter.class
 br/edu/utfpr/filter/XSSFilter.class
 br/edu/utfpr/util/Format.class
-br/edu/utfpr/controllers/HomeServlet.class

@@ -33,7 +33,7 @@
 						<td>${ revenue.receivebled == 'F' ? "SIM" : "NÃO" }</td>
 						<td>
 							<a href="editar-receita?id=${revenue.id}">Editar</a> | 
-							<a href="deletar-receita?id=${revenue.id}">Deletar</a>
+							<a href="deletar-receita?id=${revenue.id}" class="delete">Deletar</a>
 						</td>
 					</tr>
 				</c:forEach>

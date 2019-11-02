@@ -9,11 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
 
-import br.edu.utfpr.model.Expense;
 import br.edu.utfpr.model.Revenue;
 import br.edu.utfpr.persistence.PersistenceRevenue;
+import br.edu.utfpr.util.FlashMessage;
 import br.edu.utfpr.util.Format;
 import br.edu.utfpr.util.PersistenceFactory;
 
@@ -23,25 +22,39 @@ public class RevenuesController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		FlashMessage.clean();
 		
-		if (request.getServletPath().contains("receitas")) {
-			this.doGetRevenues(request, response);
-		} else if (request.getServletPath().contains("nova-receita")) {
-			this.doGetNewRevenue(request, response);
-		} else if (request.getServletPath().contains("editar-receita")) {
-			this.doGetEditRevenue(request, response);
-		} else if (request.getServletPath().contains("deletar-receita")) {
-			this.doGetDropRevenue(request, response);
+		if(session.getAttribute("isLogged") != null) {
+			if (request.getServletPath().contains("receitas")) {
+				this.doGetRevenues(request, response);
+			} else if (request.getServletPath().contains("nova-receita")) {
+				this.doGetNewRevenue(request, response);
+			} else if (request.getServletPath().contains("editar-receita")) {
+				this.doGetEditRevenue(request, response);
+			} else if (request.getServletPath().contains("deletar-receita")) {
+				this.doGetDropRevenue(request, response);
+			}
+		}else {
+			request.setAttribute("accessDenied", "true");
+			request.getRequestDispatcher("login").forward(request, response);
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		if (request.getServletPath().contains("nova-receita")) {
-			this.doPostNewRevenue(request, response);
-		} else if (request.getServletPath().contains("editar-receita")) {
-			this.doPostEditRevenue(request, response);
+		HttpSession session = request.getSession();
+		FlashMessage.clean();
+		
+		if(session.getAttribute("isLogged") != null) {
+			if (request.getServletPath().contains("nova-receita")) {
+				this.doPostNewRevenue(request, response);
+			} else if (request.getServletPath().contains("editar-receita")) {
+				this.doPostEditRevenue(request, response);
+			}
+		}else {
+			request.setAttribute("accessDenied", "true");
+			request.getRequestDispatcher("login").forward(request, response);
 		}
 	}
 // ============================================== doGet Methods ================================================//
@@ -70,8 +83,10 @@ public class RevenuesController extends HttpServlet {
 			request.setAttribute("action", "editar-receita");
 			request.getRequestDispatcher("WEB-INF/views/revenues/revenue-edit.jsp").forward(request, response);
 		} else {
-			JOptionPane.showMessageDialog(null, "Receita não informada");
-		}
+			FlashMessage.addMessage("danger", "Receita não informada ou não encontrada.");
+			request.setAttribute("flash.messages", FlashMessage.getMessages());
+			response.sendRedirect("receitas");
+		}	
 	}
 
 	private void doGetDropRevenue(HttpServletRequest request, HttpServletResponse response)
@@ -83,13 +98,15 @@ public class RevenuesController extends HttpServlet {
 		if (revenue.isValid() && revenue.getId() != null) {
 			try {
 				persistence.delete(revenue);
-				JOptionPane.showMessageDialog(null, "Receita deletada com sucesso");
+				FlashMessage.addMessage("success", "Receita deletada com sucesso.");
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao deletar Receita");
+				FlashMessage.addMessage("danger", "Erro ao deletar Receita."+e);
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Receita invalida");
+			FlashMessage.addMessage("danger", "Receita Inválida.");
 		}
+		
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
 		response.sendRedirect("receitas");
 	}
 
@@ -97,6 +114,7 @@ public class RevenuesController extends HttpServlet {
 
 	private void doPostNewRevenue(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		Revenue revenue = new Revenue(  null, 
 										request.getParameter("revDescription"),
 										Double.parseDouble(request.getParameter("revValueReceiveble")),
@@ -107,25 +125,27 @@ public class RevenuesController extends HttpServlet {
 			PersistenceRevenue persistence = PersistenceFactory.getPersistenceRevenueInstance();
 			try {
 				persistence.save(revenue);
-				JOptionPane.showMessageDialog(null, "Receita salva com sucesso.");
-				HttpSession session = request.getSession();
+				
+				FlashMessage.addMessage("success", "Receita salva com sucesso.");
+				request.setAttribute("flash.messages", FlashMessage.getMessages());
 				session.removeAttribute("revenue");
 				response.sendRedirect("receitas");
+				return;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao salvar Receita. " + e);
-				HttpSession session = request.getSession();
-				session.setAttribute("nova-receita", revenue);
-				response.sendRedirect("nova-receita");
+				FlashMessage.addMessage("danger", "Erro ao salvar Receita. " + e);
 			}
 		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("nova-receita", revenue);
-			response.sendRedirect("nova-receita");
+			FlashMessage.addMessage("danger", "Receita não informada ou não encontrada.");
 		}
+		
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		session.setAttribute("nova-receita", revenue);
+		response.sendRedirect("nova-receita");
 	}
 
 	private void doPostEditRevenue(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		PersistenceRevenue persistence = PersistenceFactory.getPersistenceRevenueInstance();
 		Revenue revenue = persistence.find(Long.parseLong(request.getParameter("revId")));
 
@@ -137,21 +157,21 @@ public class RevenuesController extends HttpServlet {
 		if (revenue.isValid()) {
 			try {
 				persistence.update(revenue);
-				JOptionPane.showMessageDialog(null, "Receita Alterada com sucesso.");
-				HttpSession session = request.getSession();
+				
+				FlashMessage.addMessage("success", "Receita Alterada com sucesso.");
+				request.setAttribute("flash.messages", FlashMessage.getMessages());		
 				session.removeAttribute("revenue");
 				response.sendRedirect("receitas");
+				return;
 			} catch (Exception e) {
-				HttpSession session = request.getSession();
-				session.setAttribute("revenue", revenue);
-				JOptionPane.showMessageDialog(null, "Erro ao salvar Receita.");
-				response.sendRedirect("editar-receita");
-				throw e;
+				FlashMessage.addMessage("danger", "Erro ao salvar Receita: "+e);
 			}
 		} else {
-			HttpSession session = request.getSession();
-			session.setAttribute("revenue", revenue);
-			response.sendRedirect("WEB-INF/views/revenues/revenue-new.jsp");
+			FlashMessage.addMessage("danger", "Receita não informada ou não encontrada.");
 		}
+		
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		session.setAttribute("revenue", revenue);
+		response.sendRedirect("editar-receita");
 	}
 }
