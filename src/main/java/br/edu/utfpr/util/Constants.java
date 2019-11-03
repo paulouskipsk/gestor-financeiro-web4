@@ -8,6 +8,8 @@ import java.util.Map;
 public class Constants {
 	public static final String PERSISTENCE_UNIT_NAME = "finances_manager";
 	public static final String LAST_SERVER_INITIALIZATION = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss").format(new Date());	
+	public static final String RECAPTCHA_KEY_SECRET = "6LfGzsAUAAAAANEnW7mQugDQYDPh4d4GIrWaIdIb";
+	public static final String RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 	
 	public static class RoleAccess{
 		public static final String ADM = "ADM";

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.JOptionPane;
 
+import br.edu.utfpr.model.Recaptcha;
 import br.edu.utfpr.model.User;
 import br.edu.utfpr.persistence.PersistenceUser;
 import br.edu.utfpr.util.Constants;
@@ -25,13 +26,14 @@ public class LoginController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		if(request.getAttribute("accessDenied") == null) {
 			if(request.getServletPath().contains(Constants.Routes.LOGOUT)){
 				HttpSession session = request.getSession(false);	
 				if(session != null){
 					session.invalidate();
 				}
-				request.getRequestDispatcher(Constants.Routes.ROOT_PATH_VIEWS+"login.jsp").forward(request, response);
+				response.sendRedirect("login");
 			}else {
 				if(request.getSession().getAttribute("isLogged") == null) {
 					request.getRequestDispatcher(Constants.Routes.ROOT_PATH_VIEWS + "login.jsp").forward(request, response);
@@ -49,29 +51,38 @@ public class LoginController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if(request.getAttribute("accessDenied") == null) {
-			try {
-				request.login(request.getParameter("username"), request.getParameter("password"));
-				
-				HttpSession session = request.getSession();
-				PersistenceUser persistence = PersistenceFactory.getPersistenceUserInstance();
-				User user = persistence.getByProperty("username", request.getParameter("username"));
-				
-				response.addCookie(this.getLogAccess(request, user));
-				response.addCookie(this.getLastServerInitialization());
-				
-				session.setAttribute("isLogged", true);
-				response.sendRedirect(Constants.Routes.HOME);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Erro ao efetuar login :" +e);
-				response.sendRedirect("login");
+		
+		if(resolveRecaptcha(request, response)) {
+			if(request.getAttribute("accessDenied") == null) {
+				try {
+					request.login(request.getParameter("username"), request.getParameter("password"));
+					
+					HttpSession session = request.getSession();
+					PersistenceUser persistence = PersistenceFactory.getPersistenceUserInstance();
+					User user = persistence.getByProperty("username", request.getParameter("username"));
+					
+					response.addCookie(this.getLogAccess(request, user));
+					response.addCookie(this.getLastServerInitialization());
+					
+					session.setAttribute("isLogged", true);
+					response.sendRedirect(Constants.Routes.HOME);
+					return;
+				} catch (Exception e) {
+					FlashMessage.addMessage("danger", "Erro ao efetuar login :" +e);				
+				}
+			}else {
+				FlashMessage.addMessage("danger", "Acesso não permitido. É preciso estar Logado para acessar esta função.");
+				request.removeAttribute("accessDenied");
 			}
 		}else {
-			FlashMessage.addMessage("danger", "Acesso não permitido. É preciso estar Logado para acessar esta função.");
-			request.removeAttribute("accessDenied");
-			request.setAttribute("flash.messages", FlashMessage.getMessages());
-			response.sendRedirect("login");
+			FlashMessage.addMessage("warning", "Recaptcha não informado");
 		}
+		request.setAttribute("flash.messages", FlashMessage.getMessages());
+		response.sendRedirect("login");
+	}
+	
+	private boolean resolveRecaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		return Recaptcha.verify(request.getParameter("g-recaptcha-response"));
 	}
 	
 	private Cookie getLogAccess(HttpServletRequest request, User user) {

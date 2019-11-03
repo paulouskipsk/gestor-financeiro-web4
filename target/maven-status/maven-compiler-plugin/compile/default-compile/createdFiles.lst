@@ -5,6 +5,7 @@ br/edu/utfpr/persistence/PersistenceEntity.class
 br/edu/utfpr/filter/RevenueFilter.class
 br/edu/utfpr/controllers/UsersController.class
 br/edu/utfpr/persistence/PersistenceUserRole.class
+br/edu/utfpr/model/Recaptcha.class
 br/edu/utfpr/filter/RootPageFilter.class
 br/edu/utfpr/filter/FlashScopeFilter.class
 br/edu/utfpr/util/HashGenerator.class

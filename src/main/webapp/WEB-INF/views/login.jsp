@@ -15,12 +15,13 @@
 	<script src="assets/js/jquery-4.3.1.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/main.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 	<!-- Flash Message -->
 	<c:forEach var="message" items="${messages}">
 		<div class="alert alert-${message.key} alert-dismissible fade show" id="flash-message" role="alert">
-			<h3><strong>Menssagem</strong></h3>	<hr/>
+			<h3><strong>Menssagem: </strong></h3>	<hr/>
 			${message.value}
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -44,7 +45,9 @@
 			<input type="password" name="password" class="form-control"
 				placeholder="Password" required> <label for="inputPassword">Senha</label>
 		</div>
-
+		<div id="recaptcha">
+			<div class="form-label-group g-recaptcha" data-sitekey="6LfGzsAUAAAAAIhVmRcQJm_4MOU3rzxX-qzkGtXN"></div>
+		</div>
 		<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
 
 		<p class="mt-5 mb-3 text-muted text-center">&copy; 

@@ -1,52 +1,60 @@
 footer {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	padding: 10px;
+	text-align: center;
+	font-weight: bold;
 }
 
-#logo-gestor-home{
-	margin:3%;
+#logo-gestor-home {
+	margin: 3%;
 	text-align: center;
 }
-#logo-gestor-home > img{
+
+#logo-gestor-home>img {
 	width: 30%;
 	height: 30%;
 }
-#user-roles-text{
+
+#user-roles-text {
 	margin-bottom: 15px;
 }
- #flash-message{
-	position: absolute; 
-	margin: 20px 10%; 
-	z-index: 99; 
+
+#flash-message {
+	position: absolute;
+	margin: 20px 10%;
+	z-index: 99;
 	width: 80%
 }
-.material-icons{
+
+.material-icons {
 	float: left;
 }
 
-.container-fluid{
+.container-fluid {
 	padding: 10px 10px 50px 10px;
 }
-.title-page{
+
+.title-page {
 	font-size: 25px;
 	font-weight: bold;
 	text-align: center;
 	color: blue;
 	margin: 20px auto;
 }
-.button-save{
+
+.button-save {
 	width: 150px !important;
 	margin: 15px auto;
 }
-.save{
+
+.save {
 	font-weight: bold;
 	width: 150px !important;
 }
-.button-add{
+
+.button-add {
 	border-radius: 50%;
 	position: fixed;
 	top: 70px;
@@ -55,29 +63,31 @@ footer {
 	font-weight: bold;
 }
 
-.image-error{
+.image-error {
 	text-align: center;
 	bottom: 10px;
 	margin: 0px 20%;
-	
 }
-.image-error > img{
+
+.image-error>img {
 	object-fit: contain;
 	width: 80%;
 	height: 80%;
 }
-.title-error{
+
+.title-error {
 	text-align: center;
 	color: red;
 	font-size: 3em;
 }
-.img-hide{
+
+.img-hide {
 	width: 60px;
-	height:90px;
-}
-#last-server-initialization{
-	position: fixed;
-	bottom: 0;
-	color:red;
+	height: 90px;
 }
 
+#last-server-initialization {
+	position: fixed;
+	bottom: 0;
+	color: red;
+}

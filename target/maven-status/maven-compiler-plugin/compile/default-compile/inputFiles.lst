@@ -9,6 +9,7 @@
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/persistence/PersistenceEntity.java
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/util/Constants.java
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/util/HashGenerator.java
+/home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/model/Recaptcha.java
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/persistence/PersistenceUserAndRole.java
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/filter/ExpenseRequestWrapper.java
 /home/everton/desenv/projects/java_projects/src/main/java/br/edu/utfpr/controllers/HomeController.java

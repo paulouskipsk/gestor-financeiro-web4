@@ -44,8 +44,10 @@
 					<div class="input-group-prepend">
 						<div class="input-group-text">R$</div>
 					</div>
-					<input type="text" class="form-control" placeholder="Valor a pagar"
-						   value ="<fmt:formatNumber value="${ expense.valuePay }" minFractionDigits = "2"/>"
+					<input 	type="text" 
+							class="form-control" 
+							placeholder="Valor a pagar"
+						   value="${ expense.valuePay }"
 						   name="expValuePay" required="required">
 				</div>
 			</div>
