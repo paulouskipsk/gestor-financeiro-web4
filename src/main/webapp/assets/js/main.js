@@ -28,7 +28,7 @@ function readCookieLastServerInitialization(){
 
 function setLastServerInitialization(){
 	var localstorage = localStorage.getItem("lastServerInitialization");
-	$('#last-server-initialization').text("Última Reinicialização do Servidor: "+ localstorage);
+	$('#last-server-initialization').text("Última Reinicialização do Servidor: " + localstorage);
 }
 
 function getLogAccess(){

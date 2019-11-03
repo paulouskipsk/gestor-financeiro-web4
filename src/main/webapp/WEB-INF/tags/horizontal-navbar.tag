@@ -20,8 +20,7 @@
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Relatorios</a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="despesas">Despesas</a>
-          <a class="dropdown-item" href="#">Receitas</a>
-          <a class="dropdown-item" href="#">Orcamento</a>
+          <a class="dropdown-item" href="receitas">Receitas</a>
         </div>
       </li>
     </ul>

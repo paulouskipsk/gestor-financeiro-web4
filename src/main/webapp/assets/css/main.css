@@ -25,7 +25,7 @@ footer {
 	position: absolute;
 	margin: 20px 10%;
 	z-index: 99;
-	width: 80%
+	width: 80%;
 }
 
 .material-icons {
@@ -87,7 +87,9 @@ footer {
 }
 
 #last-server-initialization {
-	position: fixed;
-	bottom: 0;
+	bottom: 20px;	
+	position: absolute;
 	color: red;
+	margin: 24px 2%;
+	z-index: 99;	
 }
