@@ -18,9 +18,16 @@
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="form-group">
-				<label for="expDescription">Descrição</label> <input type="text"
-					class="form-control" placeholder="Descrição da conta a pagar"
-					name="expDescription" value="${ expense.description }" required="required">
+				<label for="expDescription">Descrição</label> 
+				<input  type="text"
+						class="form-control ${empty expense.errors.description?'':'is-invalid'}"   
+						placeholder="Descrição da conta a pagar"
+						name="expDescription" 
+						value="${ expense.description }" 
+						required="required">
+				<div class="invalid-feedback">
+					${ expense.errors.description }
+				</div>
 			</div>
 		</div>
 	</div>
@@ -29,10 +36,17 @@
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="expDatePay">Data Vencimento</label>
-				 <input type="date" class="form-control" 
+				 <input type="date" 
+				 		class="form-control ${empty expense.errors.datePay?'':'is-invalid'}" 
 				 		value="<fmt:formatDate value="${ expense.datePay }" pattern="yyyy-MM-dd"/>" 
 				 		name="expDatePay" required="required">
+				 <div class="invalid-feedback">
+					${ expense.errors.datePay }
+				</div>
 			</div>
+			<div class="invalid-feedback">
+					${ expense.errors.datePay }
+				</div>
 		</div>
 	</div>
 
@@ -45,10 +59,13 @@
 						<div class="input-group-text">R$</div>
 					</div>
 					<input 	type="text" 
-							class="form-control" 
+							class="form-control ${empty expense.errors.valuePay?'':'is-invalid'}"  
 							placeholder="Valor a pagar"
 						   value="${ expense.valuePay }"
 						   name="expValuePay" required="required">
+					<div class="invalid-feedback">
+						${ expense.errors.valuePay }
+					</div>
 				</div>
 			</div>
 		</div>

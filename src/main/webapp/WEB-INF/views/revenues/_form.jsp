@@ -20,8 +20,12 @@
 				<label for="description">Descrição</label> 
 				<input type="text"
 					   value="${ revenue.description }"
-					   class="form-control" placeholder="Descrição da conta a receber"
+					   class="form-control ${empty revenue.errors.description?'':'is-invalid'}"   
+					   placeholder="Descrição da conta a receber"
 					   name="revDescription" required="required">
+				<div class="invalid-feedback">
+					${ revenue.errors.description }
+				</div>
 			</div>
 		</div>
 	</div>
@@ -31,10 +35,13 @@
 			<div class="form-group">
 				<label for="dateReceiveble">Data Recebimento</label> 
 				<input type="date" 
-						class="form-control" 
+						class="form-control ${empty revenue.errors.dateReceiveble?'':'is-invalid'}"
 				 		value="<fmt:formatDate value="${ revenue.dateReceiveble }" pattern="yyyy-MM-dd"/>"
 				 		name="revDateReceiveble" 
 				 		required="required">
+				 <div class="invalid-feedback">
+					${ revenue.errors.dateReceiveble }
+				</div>
 			</div>
 		</div>
 	</div>
@@ -48,10 +55,14 @@
 						<div class="input-group-text">R$</div>
 					</div>
 					<input	name="revValueReceiveble"
-							type="text" class="form-control"
+							type="text" 
+							class="form-control ${empty revenue.errors.valueReceiveble?'':'is-invalid'}"
 						   	placeholder="Valor a receber" 
 						   	value="${ revenue.valueReceiveble }" 
 						   	required="required">
+					<div class="invalid-feedback">
+					${ revenue.errors.valueReceiveble }
+				</div>
 				</div>
 			</div>
 		</div>

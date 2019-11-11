@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.swing.JOptionPane;
 
 import br.edu.utfpr.model.Expense;
+import br.edu.utfpr.model.User;
 import br.edu.utfpr.persistence.PersistenceExpense;
 import br.edu.utfpr.util.FlashMessage;
 import br.edu.utfpr.util.Format;
@@ -69,8 +70,15 @@ public class ExpensesController extends HttpServlet {
 
 	private void doGetNewExpense(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		Expense expense = new Expense();
+		
+		HttpSession session = request.getSession();
+		Expense expense;
+		if(session.getAttribute("expense") == null) {
+			expense = new Expense();
+		}else {
+			expense = (Expense) session.getAttribute("expense");
+		}
+		
 		request.setAttribute("action", "nova-despesa");
 		request.setAttribute("expense", expense);
 		request.getRequestDispatcher("WEB-INF/views/expenses/expense-new.jsp").forward(request, response);
@@ -136,11 +144,11 @@ public class ExpensesController extends HttpServlet {
 				FlashMessage.addMessage("danger", "Erro ao salvar Despesa."+e);
 			}
 		} else {
-			FlashMessage.addMessage("danger", "Despesa não informada ou não localizada.");
+			FlashMessage.addMessage("danger", "Erro ao Cadastrar Despesa, Verifique os campos indicados.");
 		}
 		
 		request.setAttribute("flash.messages", FlashMessage.getMessages());
-		session.setAttribute("nova-despesa", expense);
+		session.setAttribute("expense", expense);
 		response.sendRedirect("nova-despesa");
 
 	}
@@ -170,7 +178,7 @@ public class ExpensesController extends HttpServlet {
 				FlashMessage.addMessage("danger", "Erro ao salvar Despesa: "+e);
 			}
 		} else {
-			FlashMessage.addMessage("danger", "Erro ao salvar Despesa, Verifique os camos indicados.");
+			FlashMessage.addMessage("danger", "Erro ao salvar Despesa, Verifique os campos indicados.");
 		}
 
 		request.setAttribute("flash.messages", FlashMessage.getMessages());

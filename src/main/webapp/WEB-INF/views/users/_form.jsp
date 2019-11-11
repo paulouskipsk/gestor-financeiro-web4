@@ -28,7 +28,7 @@
 						value="${user.name}"
 						required="required">
 					<div class="invalid-feedback">
-						Informe um Nome com mais de 3 digitos.
+						${ user.errors.name }
 					</div>
 			</div>
 		</div>
@@ -45,7 +45,7 @@
 							value="${user.username}"
 							required="required">
 					<div class="invalid-feedback">
-						Informe um usuário com mais de 3 digitos.
+						${ user.errors.username }
 					</div>
 				</div>
 			</div>
@@ -62,7 +62,7 @@
 						placeholder="Senha" 	
 						name="usrPassword">
 				<div class="invalid-feedback">
-					Informe uma senha com mais de 3 digitos.
+					${ user.errors.password }
 				</div>
 			</div>
 		</div>

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.edu.utfpr.model.Expense;
 import br.edu.utfpr.model.Revenue;
 import br.edu.utfpr.persistence.PersistenceRevenue;
 import br.edu.utfpr.util.FlashMessage;
@@ -68,7 +69,15 @@ public class RevenuesController extends HttpServlet {
 
 	private void doGetNewRevenue(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Revenue revenue = new Revenue();
+		
+		HttpSession session = request.getSession();
+		Revenue revenue;
+		if(session.getAttribute("revenue") == null) {
+			revenue = new Revenue();
+		}else {
+			revenue = (Revenue) session.getAttribute("revenue");
+		}
+		
 		request.setAttribute("action", "nova-receita");
 		request.setAttribute("revenue", revenue);
 		request.getRequestDispatcher("WEB-INF/views/revenues/revenue-new.jsp").forward(request, response);
@@ -103,7 +112,7 @@ public class RevenuesController extends HttpServlet {
 				FlashMessage.addMessage("danger", "Erro ao deletar Receita."+e);
 			}
 		} else {
-			FlashMessage.addMessage("danger", "Receita Inválida.");
+			FlashMessage.addMessage("danger", "Receita Inválida, verifique os campos indicados.");
 		}
 		
 		request.setAttribute("flash.messages", FlashMessage.getMessages());
@@ -135,11 +144,11 @@ public class RevenuesController extends HttpServlet {
 				FlashMessage.addMessage("danger", "Erro ao salvar Receita. " + e);
 			}
 		} else {
-			FlashMessage.addMessage("danger", "Receita não informada ou não encontrada.");
+			FlashMessage.addMessage("danger", "Erro ao Cadastrar Receita, Verifique os campos indicados.");
 		}
 		
 		request.setAttribute("flash.messages", FlashMessage.getMessages());
-		session.setAttribute("nova-receita", revenue);
+		session.setAttribute("revenue", revenue);
 		response.sendRedirect("nova-receita");
 	}
 

@@ -105,15 +105,15 @@ public class User {
 		this.errors = new HashMap<String, String>();
 
 		if (this.name.length() < 3 || this.name == null) {
-			this.errors.put("name", "Nome invalido.");
+			this.errors.put("name", "Nome invalido, precisa ter ao menos 3 letras.");
 		}
 
 		if (this.username.length() < 3 || this.username == null) {
-			this.errors.put("username", "Usuario invalido.");
+			this.errors.put("username", "Usuario invalido, precisa ter ao menos 3 letras.");
 		}
 
 		if (this.password == null || this.password.length() < 3) {
-			this.errors.put("password", "Senha invalida.");
+			this.errors.put("password", "Senha invalida, precisa ter ao menos 3 letras.");
 		}else {
 			this.password = HashGenerator.getSha256(password);
 		}

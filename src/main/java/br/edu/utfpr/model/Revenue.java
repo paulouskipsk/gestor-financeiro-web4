@@ -90,6 +90,10 @@ public class Revenue {
 		this.receivebled = receivebled;
 	}
 	
+	public Map<String, String> getErrors() {
+		return errors;
+	}
+	
 	public boolean isValid() {
 		this.validation();
 		return this.errors.isEmpty();
@@ -97,5 +101,17 @@ public class Revenue {
 	
 	private void validation() {
 		this.errors = new HashMap<String, String>();
+		
+		if (this.description.length() < 3 || this.description == null) {
+			this.errors.put("description", "Descrição invalida.");
+		}
+		
+		if (this.valueReceiveble <= 0 || this.valueReceiveble == null) {
+			this.errors.put("valueReceiveble", "Valor a receber não informado.");
+		}
+		
+		if (this.dateReceiveble == null) {
+			this.errors.put("dateReceiveble", "Data Inválida.");
+		}
 	}
 }

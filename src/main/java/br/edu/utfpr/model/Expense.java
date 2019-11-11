@@ -103,5 +103,17 @@ public class Expense {
 
 	public void validation() {
 		this.errors = new HashMap<String, String>();
+		
+		if (this.description.length() < 3 || this.description == null) {
+			this.errors.put("description", "Descrição inválida.");
+		}
+		
+		if (this.valuePay <= 0 || this.valuePay == null) {
+			this.errors.put("valuePay", "Valor a pagar não informado.");
+		}
+		
+		if (this.datePay == null) {
+			this.errors.put("datePay", "Data Inválida.");
+		}
 	}
 }
